@@ -3,11 +3,10 @@
     <div class="card-body">
       <div class="row">
         <aside class="col-sm-3">
-
         </aside> <!-- col.// -->
         <article class="col-sm-6">
-          <h4 class="title"></h4>
-          <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Lorem ipsum dolor sit amet, consectetuer adipiscing elit, Ut wisi enim ad minim veniam </p>
+          <h4 class="title">{{ product.name }}</h4>
+          <p>{{ product.description }}</p>
           <dl class="dlist-align">
             <dt>Color</dt>
             <dd>Black and white</dd>
@@ -40,6 +39,7 @@
 
 <script>
 export default {
-  name: 'Product'
+  name: 'Product',
+  props: ['product']
 }
 </script>

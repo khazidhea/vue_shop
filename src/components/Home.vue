@@ -13,7 +13,15 @@
                 <div class="card-body">
                     <ul class="list-unstyled list-lg">
                       <li v-for="category in categories" v-bind:key="category.name">
-                        <a href="javascript:" @click.prevent="categoryClick(category)">{{ category.name }}<span class="float-right badge badge-light round">{{ category.products.length }}</span> </a>
+                        <a 
+                          href="javascript:" 
+                          @click.prevent="categoryClick(category)"
+                        >
+                        {{ category.name }}
+                        <span class="float-right badge badge-light round" v-if="category.products">
+                          {{ category.products.length }}
+                          </span> 
+                        </a>
                       </li>
                     </ul>  
                 </div> <!-- card-body.// -->
@@ -23,8 +31,8 @@
 
     </aside>
     <main class="col-sm-9">
-      <ul class="list-group">
-        <Product v-for="product in category.products" v-bind:key="product.name"></Product>
+      <ul class="list-group" v-if="category && category.products">
+        <Product v-for="product in category.products" v-bind:key="product.name" v-bind:product="product"></Product>
       </ul>    
     </main>
   </div>
@@ -38,32 +46,27 @@ export default {
   name: 'Home',
   data: function() {
     return {
-      'categories': [
-        {
-          'name': 'fruits',
-          'products': [
-            {'name': 'banana'},
-            {'name': 'orange'}
-          ]
-        }, 
-        {
-          'name': 'computers',
-          'products': [
-            {'name': 'xps15'},
-            {'name': 'alienware17'},
-            {'name': 'macbook13'}
-          ]
-        }
-      ]
+      'category': null,
+      'categories': []
     }
   },
   methods: {
-    categoryClick(category) {
+    categoryClick: function (category) {
       this.category = category;
+      this.axios
+        .get('http://127.0.0.1:8000/api/categories/' + category.id + '/')
+        .then(function (response) {
+          category.products = response.data.products;
+        });
     }
   },
-  created: function() {
-    this.category = this.categories[0];
+  mounted: function() {
+    var self = this;
+    this.axios
+      .get('http://127.0.0.1:8000/api/categories/')
+      .then(function (response) {
+        self.categories = response.data;
+      });
   },
   components: {
     Product
